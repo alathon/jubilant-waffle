@@ -1,0 +1,30 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class SelectionSingleton : MonoBehaviour {
+	public static SelectionSingleton instance = null;
+	private GameObject selected = null;
+
+	public static void Select(GameObject o) {
+		if (SelectionSingleton.instance.selected != null) {
+			SelectionSingleton.Deselect (SelectionSingleton.instance.selected);
+		}
+
+		SelectionSingleton.instance.selected = o;
+		o.GetComponent<SelectionIndicator> ().Activate ();
+	}
+
+	public static void Deselect(GameObject o) {
+		o.GetComponent<SelectionIndicator> ().Deactivate ();
+	}
+
+	void Awake() {
+		if (instance == null) {
+			instance = this;
+		} else if (instance != this) {
+			Destroy (gameObject);
+		}
+
+		DontDestroyOnLoad (gameObject);
+	}
+}
