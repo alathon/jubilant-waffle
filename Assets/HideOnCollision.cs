@@ -2,12 +2,10 @@
 using System.Collections;
 
 public class HideOnCollision : MonoBehaviour {
-	private static string TARGET = "Sphere";
 	private int collisionCount = 0;
 
 	void OnTriggerEnter(Collider other) {
-		print ("OnCollisionEnter!");
-		if (other.gameObject.name.Equals (TARGET)) {
+		if (other.GetComponent<SelectionIndicator>() != null) {
 			collisionCount += 1;
 			if(collisionCount > 0) this.gameObject.GetComponent<MeshRenderer> ().enabled = false;
 			SelectionSingleton.Select (other.gameObject);
@@ -15,7 +13,7 @@ public class HideOnCollision : MonoBehaviour {
 	}
 
 	void OnTriggerExit(Collider other) {
-		if (other.gameObject.name.Equals (TARGET)) {
+		if (other.GetComponent<SelectionIndicator>() != null) {
 			SelectionSingleton.Deselect (other.gameObject);
 			collisionCount -= 1;
 		}

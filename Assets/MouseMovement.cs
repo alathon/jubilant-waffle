@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class MouseMovement : MonoBehaviour {
 	void Start () {
@@ -12,8 +13,12 @@ public class MouseMovement : MonoBehaviour {
 		float hitdist = 0.0f;
 		if (playerPlane.Raycast (ray, out hitdist)) {
 			Vector3 targetPoint = ray.GetPoint (hitdist);
-			this.
-			transform.position = targetPoint;
+            if (Vector3.Distance(transform.position, targetPoint) > 0.01f)
+            {
+                Logging.Log(string.Format("MouseMove {0} -> {1} \n",transform.position, targetPoint));
+            }
+
+			this.transform.position = targetPoint;
 		}
 	}
 }
