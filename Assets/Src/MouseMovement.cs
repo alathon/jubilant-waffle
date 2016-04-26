@@ -55,7 +55,7 @@ public class MouseMovement : MonoBehaviour {
                     if (selected != null)
                     {
                         Vector3 diff = targetPoint - oldPosition;
-                        selected.GetComponent<SphereMovement>().MoveBy(diff);
+                        selected.GetComponent<DataItemMovement>().MoveBy(diff);
                     }
                 }
             }

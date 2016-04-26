@@ -3,9 +3,10 @@ using System.Collections;
 
 public class SelectionIndicator : MonoBehaviour {
 	private MeshRenderer indicatorMeshRenderer = null;
+    public GameObject indicatorChild;
 
 	void Awake() {
-		indicatorMeshRenderer = this.gameObject.transform.FindChild ("Indicator").GetComponent<MeshRenderer> ();
+		indicatorMeshRenderer = indicatorChild.GetComponent<MeshRenderer> ();
 	}
 
 	public void Activate() {

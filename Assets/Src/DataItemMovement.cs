@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SphereMovement : MonoBehaviour {
-    public class SphereMovementEvent
+public class DataItemMovement : MonoBehaviour {
+    public class DataItemMovementEvent
     {
         public readonly Vector3 From;
         public readonly Vector3 To;
-        public SphereMovementEvent(Vector3 from, Vector3 to)
+        public DataItemMovementEvent(Vector3 from, Vector3 to)
         {
             this.From = from;
             this.To = to;
@@ -17,6 +17,6 @@ public class SphereMovement : MonoBehaviour {
     {
         Vector3 oldPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         this.transform.Translate(diff);
-        Logging.Log(new SphereMovementEvent(oldPos, this.transform.position));
+        Logging.Log(new DataItemMovementEvent(oldPos, this.transform.position));
     }
 }

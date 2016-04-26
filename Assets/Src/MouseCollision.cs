@@ -10,6 +10,8 @@ public class MouseCollision : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        //print(string.Format("Collided with other trigger: {0}", other.gameObject));
+
         if (other.GetComponent<SelectionIndicator>() != null)
         {
             collidedWith.AddLast(other.gameObject);
@@ -23,7 +25,7 @@ public class MouseCollision : MonoBehaviour
         {
             if (collidedWith.Contains(other.gameObject))
             {
-                print(string.Format("Found {0} in collidedWith. Removing.", other.gameObject));
+                //print(string.Format("Found {0} in collidedWith. Removing.", other.gameObject));
                 collidedWith.Remove(other.gameObject);
                 dirty = true;
             }
@@ -48,7 +50,7 @@ public class MouseCollision : MonoBehaviour
         {
             GameObject closest = GetClosest();
             GameObject selected = SelectionSingleton.Selected;
-            print(string.Format("Closest: {0}, Selected: {1}", closest, selected));
+            //print(string.Format("Closest: {0}, Selected: {1}", closest, selected));
 
             if (closest != null)
             {
