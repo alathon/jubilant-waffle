@@ -38,3 +38,6 @@ sysinfo.txt
 *.JPG.meta
 *.PNG.meta
 *.db
+
+*.pdb
+*.exe

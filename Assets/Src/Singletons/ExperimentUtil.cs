@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
+//using UnityEditor;
 using System;
 
 public class ExperimentUtil : MonoBehaviour {
@@ -41,11 +41,26 @@ public class ExperimentUtil : MonoBehaviour {
     {
         DataItem item = this.queue.Items.Dequeue();
         GameObject spawned = SelectableSpawner.Spawn(item.imagePath);
-        spawned.transform.Translate(new Vector3(item.x, 0f, item.y));
+        if(item.location != null)
+        {
+            var y = spawned.transform.localPosition.y;
+            spawned.transform.localPosition = new Vector3(item.location.x, y, item.location.y);
+        }
+    }
+
+    private void PopulateFromQueue()
+    {
+        DataItem item = this.queue.Items.Peek();
+        while (item != null && item.location != null)
+        {
+            this.PopFromQueue();
+            item = this.queue.Items.Peek();
+        }
     }
 
     private void LoadExperiment()
     {
+        /*
         var path = EditorUtility.OpenFilePanel(
                     "Load experiment file",
                     "",
@@ -57,14 +72,15 @@ public class ExperimentUtil : MonoBehaviour {
                 DataItemQueue q = DataItemQueue.GetDataItemQueue(path);
                 this.queue = q;
                 this.curExperimentPath = path;
+                // TODO: Reset experiment state, e.g. delete previous items, etc etc...
+                this.PopulateFromQueue();
             } catch (Exception ex)
             {
                 Debug.Log("Exception while loading data item queue: ");
                 Debug.Log(ex);
             }
-            
-            
         }
+        */
     }
 
     private void SaveExperiment()

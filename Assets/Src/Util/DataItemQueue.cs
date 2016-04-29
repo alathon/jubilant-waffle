@@ -5,13 +5,15 @@ using System.IO;
 
 public class DataItem
 {
-    public readonly float x;
-    public readonly float y;
+    public readonly Vector2 location;
     public readonly string imagePath;
 
     public DataItem(float x, float y, string imagePath) {
-        this.x = x;
-        this.y = y;
+        this.location = new Vector2(x, y);
+        this.imagePath = imagePath;
+    }
+    public DataItem(string imagePath)
+    {
         this.imagePath = imagePath;
     }
 }
@@ -22,14 +24,16 @@ public class NewFormatDataItemQueue : DataItemQueue
     {
         string[] parts = line.Split(',');
         string filename = parts[0];
-        float x = 0f;
-        float y = 0f;
         if(parts.Length >= 3)
         {
-            x = float.Parse(parts[1]);
-            y = float.Parse(parts[2]);
+            float x = float.Parse(parts[1]);
+            float y = float.Parse(parts[2]);
+            return new DataItem(x, y, filename);
+        } else
+        {
+            return new DataItem(filename);
         }
-        return new DataItem(x, y, filename);
+        
     }
 }
 public class OldFormatDataItemQueue : DataItemQueue
