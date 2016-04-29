@@ -4,10 +4,10 @@ using System;
 
 public class MouseMovement : MonoBehaviour {
     GameObject ground;
-    float xMin = -6.23f;
-    float xMax = 7.65f;
-    float zMin = -3.85f;
-    float zMax = 5.08f;
+    float xMin = 0f;
+    float xMax = 10f;
+    float zMin = 0f;
+    float zMax = 10f;
     
     public class MouseMovementEvent
     {
@@ -23,7 +23,7 @@ public class MouseMovement : MonoBehaviour {
 
         public override string ToString()
         {
-            return string.Format("MouseMove {0} -> {1} \n", from, to);
+            return string.Format("MouseMove {0} -> {1}", from, to);
         }
     }
 
@@ -31,10 +31,6 @@ public class MouseMovement : MonoBehaviour {
     {
         ground = GameObject.Find("Ground");
     }
-
-    void Start () {
-	
-	}
 
 	void Update () {
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -44,18 +40,22 @@ public class MouseMovement : MonoBehaviour {
 			Vector3 i = ray.GetPoint (hitdist);
             Vector3 targetPoint = new Vector3(Mathf.Clamp(i.x, zMin, zMax), i.y, Mathf.Clamp(i.z, xMin, xMax));
             Vector3 oldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            if (Vector3.Distance(oldPosition, targetPoint) > 0.001f)
+            if (Vector3.Distance(oldPosition, targetPoint) > 0.01f)
             {
-                Logging.Log(new MouseMovementEvent(oldPosition, targetPoint));
+                GameObject selected = SelectionSingleton.Selected;
+
+                // Only log mouse movements when we don't have something selected,
+                // since moving a selected object generates its own event.
+                if(selected == null) Logging.Log(new MouseMovementEvent(oldPosition, targetPoint));
                 
                 this.transform.position = targetPoint;
                 if (Input.GetMouseButton(0))
                 {
-                    GameObject selected = SelectionSingleton.Selected;
+                    
                     if (selected != null)
                     {
                         Vector3 diff = targetPoint - oldPosition;
-                        selected.GetComponent<DataItemMovement>().MoveBy(diff);
+                        selected.GetComponent<MoveSelectable>().MoveBy(diff);
                     }
                 }
             }

@@ -1,6 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public class RigidbodyMovementEvent
+{
+    public readonly Vector3 from;
+    public readonly Vector3 to;
+    public readonly double time;
+
+    public RigidbodyMovementEvent(Vector3 from, Vector3 to)
+    {
+        this.from = from;
+        this.to = to;
+    }
+
+    public override string ToString()
+    {
+        return string.Format("RigidBodyMove {0} -> {1}", from, to);
+    }
+}
+
 public class FollowRigidbody : MonoBehaviour {
     public string rigidbodyName = "Rigid Body XXX";
     private GameObject rigidBody;
@@ -34,7 +52,15 @@ public class FollowRigidbody : MonoBehaviour {
                 Debug.Log("X:" + rigidBody.transform.position.x + " Z:" + rigidBody.transform.position.z);
             }
 
-            if(groundMapper != null) this.transform.position = groundMapper.translate(rigidBody.transform.position);
+            if (groundMapper != null)
+            {
+                var newPos = groundMapper.translate(rigidBody.transform.position);
+                if (Vector3.Distance(this.transform.position, newPos) > 0.01f)
+                {
+                    Logging.Log(new RigidbodyMovementEvent(this.transform.position, newPos));
+                    this.transform.position = newPos;
+                }
+            }
         }
 	}
 }

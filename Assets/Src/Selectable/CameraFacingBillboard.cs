@@ -3,7 +3,12 @@ using System.Collections;
 
 public class CameraFacingBillboard : MonoBehaviour
 {
-    public Camera m_Camera;
+    private Camera m_Camera;
+
+    void Awake()
+    {
+        m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+    }
 
     void Update()
     {

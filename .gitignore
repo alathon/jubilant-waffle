@@ -27,3 +27,14 @@ sysinfo.txt
 
 # Motive project.
 *.ttp
+
+# Images
+*.jpg
+*.png
+*.png.meta
+*.jpg.meta
+*.JPG
+*.PNG
+*.JPG.meta
+*.PNG.meta
+*.db

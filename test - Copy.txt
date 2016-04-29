@@ -1,0 +1,2 @@
+filename,x (optional),y (optional)
+Images\\038097827X.01.MZZZZZZZ.jpg

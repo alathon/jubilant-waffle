@@ -6,12 +6,26 @@ public class SelectionSingleton : MonoBehaviour {
 	private GameObject selected = null;
     public static GameObject Selected { get { return SelectionSingleton.instance.selected; } }
 
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
+    }
+
     public static void Select(GameObject o) {
 		if (SelectionSingleton.instance.selected != null) {
 			SelectionSingleton.Deselect (SelectionSingleton.instance.selected);
 		}
 
-        Logging.Log(string.Format("Selected {0}\n", o.name));
+        Logging.Log(string.Format("Selected {0}", o.name));
 		SelectionSingleton.instance.selected = o;
 		o.GetComponent<SelectionIndicator> ().Activate ();
 	}
@@ -23,13 +37,5 @@ public class SelectionSingleton : MonoBehaviour {
 
     
 
-	void Awake() {
-		if (instance == null) {
-			instance = this;
-		} else if (instance != this) {
-			Destroy (gameObject);
-		}
-
-		DontDestroyOnLoad (gameObject);
-	}
+	
 }

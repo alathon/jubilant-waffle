@@ -57,7 +57,7 @@ public class Logging : MonoBehaviour {
     void FixedUpdate()
     {
         counter += 1;
-        if(counter % 5000 == 0)
+        if(counter % 1000 == 0)
         {
             this.flush();
         }
@@ -66,7 +66,7 @@ public class Logging : MonoBehaviour {
     private void flush()
     {
         mut.WaitOne();
-        using (StreamWriter w = new StreamWriter(filePath))
+        using (StreamWriter w = new StreamWriter(filePath, true))
         {
             w.Write(sb);
             sb.Length = 0;
@@ -78,7 +78,8 @@ public class Logging : MonoBehaviour {
     {
         double ms = DateTime.UtcNow.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
         mut.WaitOne();
-        Logging.instance.sb.Append(string.Format("[{0}]",ms)).Append(data);
+        var text = string.Format("[{0}] {1}\n", ms, data);
+        Logging.instance.sb.Append(text);
         mut.ReleaseMutex();
     }
 
@@ -86,7 +87,8 @@ public class Logging : MonoBehaviour {
     {
         double ms = DateTime.UtcNow.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
         mut.WaitOne();
-        Logging.instance.sb.Append(string.Format("[{0}]", ms)).Append(data);
+        var text = string.Format("[{0}] {1}\n", ms, data);
+        Logging.instance.sb.Append(text);
         Logging.instance.events.AddLast(new LogEvent(data, ms));
         mut.ReleaseMutex();
     }
