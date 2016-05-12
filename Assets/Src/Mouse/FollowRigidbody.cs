@@ -55,10 +55,11 @@ public class FollowRigidbody : MonoBehaviour {
             if (groundMapper != null)
             {
                 var newPos = groundMapper.translate(rigidBody.transform.position);
-                if (Vector3.Distance(this.transform.position, newPos) > 0.01f)
+                var clampedPos = new Vector3(Mathf.Clamp(newPos.x, 0f, 10f), newPos.y, Mathf.Clamp(newPos.z, 0f, 10f));
+                if (Vector3.Distance(this.transform.position, clampedPos) > 0.01f)
                 {
-                    Logging.Log(new RigidbodyMovementEvent(this.transform.position, newPos));
-                    this.transform.position = newPos;
+                    Logging.Log(new RigidbodyMovementEvent(this.transform.position, clampedPos));
+                    this.transform.position = clampedPos;
                 }
             }
         }
