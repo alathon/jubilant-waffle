@@ -4,6 +4,7 @@ using System;
 
 public class MouseMovement : MonoBehaviour {
     GameObject ground;
+    PlayerCollision playerCollision;
     float xMin = 0f;
     float xMax = 10f;
     float zMin = 0f;
@@ -28,6 +29,7 @@ public class MouseMovement : MonoBehaviour {
 
     void Awake()
     {
+        playerCollision = this.GetComponentInChildren<PlayerCollision>();
         ground = GameObject.Find("Ground");
     }
 
@@ -37,25 +39,24 @@ public class MouseMovement : MonoBehaviour {
 		float hitdist = 0.0f;
 		if (playerPlane.Raycast (ray, out hitdist)) {
 			Vector3 i = ray.GetPoint (hitdist);
-            Vector3 targetPoint = new Vector3(Mathf.Clamp(i.x, zMin, zMax), i.y, Mathf.Clamp(i.z, xMin, xMax));
+            Vector3 targetPoint = new Vector3(Mathf.Clamp(i.x, zMin, zMax), transform.position.y, Mathf.Clamp(i.z, xMin, xMax));
             Vector3 oldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            if (Vector3.Distance(oldPosition, targetPoint) > 0.01f)
+            if (Vector3.Distance(oldPosition, targetPoint) > 0.1f)
             {
+                this.transform.position = targetPoint;
                 GameObject selected = SelectionSingleton.Selected;
 
-                // Only log mouse movements when we don't have something selected,
-                // since moving a selected object generates its own event.
-                if(selected == null) Logging.Log(new MouseMovementEvent(oldPosition, targetPoint));
-                
-                this.transform.position = targetPoint;
-                if (Input.GetMouseButton(0))
+                if(selected != null)
                 {
-                    
-                    if (selected != null)
+                    if(Input.GetMouseButton(0))
                     {
-                        Vector3 diff = targetPoint - oldPosition;
-                        selected.GetComponent<MoveSelectable>().MoveBy(diff);
+                        //Vector3 diff = targetPoint - oldPosition;
+                        //selected.GetComponent<MoveSelectable>().MoveBy(diff);
+                        selected.GetComponent<MoveSelectable>().MoveTo(new Vector3(targetPoint.x, selected.transform.position.y, targetPoint.z));
                     }
+                } else
+                {
+                    Logging.Log(new MouseMovementEvent(oldPosition, targetPoint));
                 }
             }
         }

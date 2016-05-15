@@ -3,18 +3,23 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-public class MouseCollision : MonoBehaviour
+public class PlayerCollision : MonoBehaviour
 {
-    private LinkedList<GameObject> collidedWith = new LinkedList<GameObject>();
+    public LinkedList<GameObject> CollidedWith { get; private set; }
     private bool dirty = false;
+    private MeshRenderer meshRenderer;
+
+    void Awake()
+    {
+        this.meshRenderer = this.gameObject.GetComponent<MeshRenderer>();
+        this.CollidedWith = new LinkedList<GameObject>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        //print(string.Format("Collided with other trigger: {0}", other.gameObject));
-
         if (other.GetComponent<SelectionIndicator>() != null)
         {
-            collidedWith.AddLast(other.gameObject);
+            CollidedWith.AddLast(other.gameObject);
             dirty = true;
         }
     }
@@ -23,20 +28,20 @@ public class MouseCollision : MonoBehaviour
     {
         if (other.GetComponent<SelectionIndicator>() != null)
         {
-            if (collidedWith.Contains(other.gameObject))
+            if (CollidedWith.Contains(other.gameObject))
             {
-                //print(string.Format("Found {0} in collidedWith. Removing.", other.gameObject));
-                collidedWith.Remove(other.gameObject);
+                CollidedWith.Remove(other.gameObject);
                 dirty = true;
             }
         }
     }
 
+    
     GameObject GetClosest()
     {
         double dist = Double.MaxValue;
         GameObject closest = null;
-        foreach (GameObject gObj in collidedWith)
+        foreach (GameObject gObj in CollidedWith)
         {
             double d = Vector3.Distance(gObj.transform.position, this.transform.position);
             if (d <= dist) closest = gObj;
@@ -50,25 +55,28 @@ public class MouseCollision : MonoBehaviour
         {
             GameObject closest = GetClosest();
             GameObject selected = SelectionSingleton.Selected;
-            //print(string.Format("Closest: {0}, Selected: {1}", closest, selected));
 
             if (closest != null)
             {
                 if (selected == null)
                 {
                     SelectionSingleton.Select(closest);
-                    this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    //closest.transform.position = new Vector3(this.transform.position.x, closest.transform.position.y, this.transform.position.z);
+                    //transform.parent.gameObject.transform.position = closest.gameObject.transform.position;
+                    this.meshRenderer.enabled = false;
                 }
                 else if (selected != closest && Input.GetMouseButton(0) == false)
                 {
                     SelectionSingleton.Select(closest);
-                    this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    this.meshRenderer.enabled = false;
                 }
             }
             else
             {
-                SelectionSingleton.Deselect(SelectionSingleton.Selected);
-                this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                if(Input.GetMouseButton(0) == false && selected != null) {
+                    SelectionSingleton.Deselect(SelectionSingleton.Selected);
+                    this.meshRenderer.enabled = true;
+                }
             }
 
             dirty = false;

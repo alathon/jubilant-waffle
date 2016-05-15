@@ -20,6 +20,24 @@ public class MoveSelectable : MonoBehaviour {
         }
     }
 
+    public void MoveTo(Vector3 pos)
+    {
+        Collider[] colliders = Physics.OverlapBox(pos, new Vector3(0.8f, 0.8f, 0.4f));
+        foreach(Collider col in colliders)
+        {
+            if (col.gameObject == this.gameObject) continue;
+
+            if(col is BoxCollider)
+            {
+                return;
+            }
+        }
+
+        Vector3 oldPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        this.transform.position = pos;
+        Logging.Log(new MoveSelectableEvent(this.gameObject.name, oldPos, this.transform.position));
+    }
+
 	public void MoveBy(Vector3 diff)
     {
         Vector3 oldPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);

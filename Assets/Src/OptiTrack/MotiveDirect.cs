@@ -415,7 +415,7 @@ public class MotiveDirect : MonoBehaviour {
             }
 
         }
-        catch(System.Exception ex)
+        catch(Exception ex)
         {
         }
     }
