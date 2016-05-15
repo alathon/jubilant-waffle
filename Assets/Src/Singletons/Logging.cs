@@ -66,7 +66,7 @@ public class Logging : MonoBehaviour {
     private void flush()
     {
         mut.WaitOne();
-        using (StreamWriter w = new StreamWriter(filePath, true))
+        using (StreamWriter w = new StreamWriter(Application.dataPath + "/" + filePath, true))
         {
             w.Write(sb);
             sb.Length = 0;
@@ -90,6 +90,14 @@ public class Logging : MonoBehaviour {
         var text = string.Format("[{0}] {1}\n", ms, data);
         Logging.instance.sb.Append(text);
         Logging.instance.events.AddLast(new LogEvent(data, ms));
+        mut.ReleaseMutex();
+    }
+
+    public static void CopyLogTo(string otherPath)
+    {
+        Logging.instance.flush();
+        mut.WaitOne();
+        File.Copy(Application.dataPath + "/" + Logging.instance.filePath, Application.dataPath + "/" + otherPath);
         mut.ReleaseMutex();
     }
 }

@@ -42,8 +42,7 @@ public class ExperimentUtil : MonoBehaviour {
             Debug.Log("At the end of catalog. Cannot spawn more items.");
             return;
         }
-        
-        
+
         var item = SelectableSpawner.Spawn(this.GetCurrentItem().id, this.GetCurrentItem().imagePath);
         Debug.Log("Spawned " + item);
 
@@ -57,7 +56,7 @@ public class ExperimentUtil : MonoBehaviour {
         {
             try
             {
-                var filePath = Application.dataPath + "\\" + catalogPath;
+                var filePath = Application.dataPath + "/" + catalogPath;
                 DataItemList q = DataItemList.GetDataItemQueue(filePath);
                 this.dataItems = q;
                 Debug.Log("Loaded catalog at " + filePath);
@@ -70,10 +69,13 @@ public class ExperimentUtil : MonoBehaviour {
             }
         }
     }
-
-    // TODO: Save a copy of current log.
+    
     public void SaveExperiment()
     {
-
+        var time = DateTime.UtcNow.ToUniversalTime();
+        var timeStr = time.Year + "-" + time.Month + "-" + time.Day + "_" + time.Hour + "-" + time.Minute + "-" + time.Second;
+        string otherPath = "Logs/" + timeStr + ".log";
+        Debug.Log("Saving experiment log to " + otherPath);
+        Logging.CopyLogTo(otherPath);
     }
 }
