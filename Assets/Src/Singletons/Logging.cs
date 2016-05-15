@@ -6,20 +6,26 @@ using System.Threading;
 using System;
 using System.Collections.Generic;
 
+public class LogEvent
+{
+    public readonly object Source;
+    public readonly double Time;
+
+    public LogEvent(object source, double time)
+    {
+        this.Source = source;
+        this.Time = time;
+    }
+}
+
 public class Logging : MonoBehaviour {
     private static Logging instance;
-
-    public class LogEvent
-    {
-        public readonly object Source;
-        public readonly double Time;
-
-        public LogEvent(object source, double time)
-        {
-            this.Source = source;
-            this.Time = time;
-        }
-    }
+    public string filePath;
+    private LinkedList<LogEvent> events = new LinkedList<LogEvent>();
+    private static Mutex mut = new Mutex();
+    private StringBuilder sb = new StringBuilder();
+    private int counter = 0;
+    public LinkedList<LogEvent> Events { get { return events; } }
 
     void Awake()
     {
@@ -32,22 +38,12 @@ public class Logging : MonoBehaviour {
         }
 
         DontDestroyOnLoad(gameObject);
+
+        // Clear current log.
+        File.Delete(Application.dataPath + "/" + Logging.instance.filePath);
     }
 
-    public string filePath;
-    private LinkedList<LogEvent> events = new LinkedList<LogEvent>();
 
-    private static Mutex mut = new Mutex();
-    private StringBuilder sb = new StringBuilder();
-    private int counter = 0;
-
-    public LinkedList<LogEvent> Events
-    {
-        get
-        {
-            return events;
-        }
-    }
 
     void OnApplicationQuit()
     {
@@ -62,6 +58,7 @@ public class Logging : MonoBehaviour {
             this.flush();
         }
     }
+    
 
     private void flush()
     {
