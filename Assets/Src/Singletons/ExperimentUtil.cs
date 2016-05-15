@@ -6,8 +6,9 @@ using System;
 public class ExperimentUtil : MonoBehaviour {
     public static ExperimentUtil instance = null;
 
-    private DataItemQueue queue;
-    private string curExperimentPath;
+    public string catalogPath;
+    private DataItemList dataItems;
+    private int dataItemCursor = 0;
 
     void Awake()
     {
@@ -22,94 +23,57 @@ public class ExperimentUtil : MonoBehaviour {
 
         DontDestroyOnLoad(gameObject);
     }
-    
-	// Update is called once per frame
-	void Update () {
-	    if(Input.GetKeyDown(KeyCode.L))
-        {
-            this.LoadExperiment();
-        } else if(Input.GetKeyDown(KeyCode.S))
-        {
-            this.SaveExperiment();
-        } else if(Input.GetKeyDown(KeyCode.A))
-        {
-            this.PopFromQueue();
-        }
-	}
 
-    private void PopFromQueue()
+
+    private DataItem GetCurrentItem()
     {
-        DataItem item = this.queue.Items.Dequeue();
-        GameObject spawned = SelectableSpawner.Spawn(item.imagePath);
-        if(item.location != null)
-        {
-            var y = spawned.transform.localPosition.y;
-            spawned.transform.localPosition = new Vector3(item.location.x, y, item.location.y);
-        }
+        return this.dataItems.Items[this.dataItemCursor];
     }
 
-    private void PopulateFromQueue()
+    public void SpawnNext()
     {
-        DataItem item = this.queue.Items.Peek();
-        while (item != null && item.location != null)
+        if (this.dataItems == null)
         {
-            this.PopFromQueue();
-            item = this.queue.Items.Peek();
+            return;
         }
+
+        if (this.dataItemCursor >= this.dataItems.Items.Count)
+        {
+            Debug.Log("At the end of catalog. Cannot spawn more items.");
+            return;
+        }
+        
+        
+        var item = SelectableSpawner.Spawn(this.GetCurrentItem().id, this.GetCurrentItem().imagePath);
+        Debug.Log("Spawned " + item);
+
+        this.dataItemCursor++;
+        // TODO: Activate detail view for item.
     }
 
-    private void LoadExperiment()
+    public void LoadCatalog()
     {
-        /*
-        var path = EditorUtility.OpenFilePanel(
-                    "Load experiment file",
-                    "",
-                    "exp");
-        if (path.Length != 0)
+        if (catalogPath.Length != 0)
         {
             try
             {
-                DataItemQueue q = DataItemQueue.GetDataItemQueue(path);
-                this.queue = q;
-                this.curExperimentPath = path;
-                // TODO: Reset experiment state, e.g. delete previous items, etc etc...
-                this.PopulateFromQueue();
-            } catch (Exception ex)
+                var filePath = Application.dataPath + "\\" + catalogPath;
+                DataItemList q = DataItemList.GetDataItemQueue(filePath);
+                this.dataItems = q;
+                Debug.Log("Loaded catalog at " + filePath);
+                // TODO: Reset any existing state.
+            }
+            catch (Exception ex)
             {
                 Debug.Log("Exception while loading data item queue: ");
                 Debug.Log(ex);
             }
         }
-        */
     }
 
-    private void SaveExperiment()
+    // TODO: Save a copy of current log.
+    public void SaveExperiment()
     {
-        if(this.curExperimentPath == null)
-        {
-            throw new Exception("You must first load an experiment.");
-        }
 
-        try
-        {
-            var lines = System.IO.File.ReadAllLines(this.curExperimentPath);
-            for(int i = 1; i < lines.Length; i++)
-            {
-                var line = lines[i].Split(',');
-                GameObject gObj = GameObject.Find(line[0]);
-                if(gObj != null)
-                {
-                    var x = gObj.transform.localPosition.x.ToString();
-                    var y = gObj.transform.localPosition.z.ToString();
-                    lines[i] = String.Format("{0},{1},{2}", line[0], x, y);
-                }
-            }
-            System.IO.File.WriteAllLines(this.curExperimentPath, lines);
-        } catch (Exception ex)
-        {
-            Debug.Log("Encountered exception while trying to read or write to " + this.curExperimentPath);
-            // Rethrow exception.
-            throw ex;
-        }
     }
 }

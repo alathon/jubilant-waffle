@@ -85,7 +85,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &2105739
+--- !u!1001 &309212301
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -123,6 +123,14 @@ Prefab:
     - target: {fileID: 453284, guid: 969adccaecf4f23419b9b46b53d490af, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11445358, guid: 969adccaecf4f23419b9b46b53d490af, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11496124, guid: 969adccaecf4f23419b9b46b53d490af, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 969adccaecf4f23419b9b46b53d490af, type: 2}
@@ -188,35 +196,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
---- !u!1 &860307358 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 197662, guid: 54c2d23a62be6324e9af60083c433df7, type: 2}
-  m_PrefabInternal: {fileID: 940748899}
---- !u!114 &860307359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 860307358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 817b7fb3cb048d640976cb0d79e665e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dataFolderPath: \Data\
-  prefab: {fileID: 183656, guid: d301e335c98baba44ac0cc9e93c904c5, type: 2}
-  defaultLocation: {x: 5, y: 0.525, z: 5}
---- !u!114 &860307360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 860307358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62862fe5d4e0f5948baa88b2bb9b6b7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &940748899
 Prefab:
   m_ObjectHideFlags: 0
@@ -256,6 +235,18 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 11415506, guid: 54c2d23a62be6324e9af60083c433df7, type: 2}
+      propertyPath: catalogPath
+      value: Catalogs\test.cat
+      objectReference: {fileID: 0}
+    - target: {fileID: 11473984, guid: 54c2d23a62be6324e9af60083c433df7, type: 2}
+      propertyPath: dataFolderPath
+      value: Data\
+      objectReference: {fileID: 0}
+    - target: {fileID: 11473984, guid: 54c2d23a62be6324e9af60083c433df7, type: 2}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 154766, guid: d301e335c98baba44ac0cc9e93c904c5, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 54c2d23a62be6324e9af60083c433df7, type: 2}
   m_IsPrefabParent: 0

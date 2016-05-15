@@ -13,7 +13,6 @@ public class MouseMovement : MonoBehaviour {
     {
         public readonly Vector3 from;
         public readonly Vector3 to;
-        public readonly double time;
 
         public MouseMovementEvent(Vector3 from, Vector3 to)
         {

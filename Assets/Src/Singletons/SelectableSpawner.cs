@@ -3,8 +3,25 @@ using System.Collections;
 using System;
 
 public class SelectableSpawner : MonoBehaviour {
+    public class SpawnEvent
+    {
+        public readonly string imageName;
+        public readonly int id;
+
+        public SpawnEvent(int id, string imageName)
+        {
+            this.id = id;
+            this.imageName = imageName;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Spawned item {0} (Image path: {1})", id, imageName);
+        }
+    }
+
     public static SelectableSpawner instance = null;
-    public string dataFolderPath = "\\Data\\";
+    public string dataFolderPath = "Data\\";
 
     private GameObject spawnParent;
 
@@ -28,13 +45,13 @@ public class SelectableSpawner : MonoBehaviour {
 
     public Vector3 defaultLocation;
 
-    public static GameObject Spawn(string imageName)
+    public static GameObject Spawn(int id, string imageName)
     {
-        var filePath = Application.dataPath + instance.dataFolderPath + imageName;
+        var filePath = Application.dataPath + "\\" + instance.dataFolderPath + imageName;
         if (System.IO.File.Exists(filePath))
         {
             GameObject spawned = (GameObject)Instantiate(instance.prefab, instance.defaultLocation, Quaternion.identity);
-            spawned.name = imageName;
+            spawned.name = "Item " + id;
 
             // Create material for image.
             Material newMat = new Material(Shader.Find("Standard"));
@@ -47,7 +64,7 @@ public class SelectableSpawner : MonoBehaviour {
             // Move to proper location.
             spawned.transform.SetParent(instance.spawnParent.transform);
 
-            Logging.LogText(String.Format("Spawned {0}", spawned.name));
+            Logging.Log(new SpawnEvent(id, imageName));
             return spawned;
         }
         else throw new Exception("No image at " + filePath);

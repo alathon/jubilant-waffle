@@ -1,88 +1,67 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 
 public class DataItem
 {
-    public readonly Vector2 location;
+    public readonly int id;
     public readonly string imagePath;
 
-    public DataItem(float x, float y, string imagePath) {
-        this.location = new Vector2(x, y);
-        this.imagePath = imagePath;
-    }
-    public DataItem(string imagePath)
-    {
+    public DataItem(int id, string imagePath) {
+        this.id = id;
         this.imagePath = imagePath;
     }
 }
 
-public class NewFormatDataItemQueue : DataItemQueue
+public class NewFormatDataItemList : DataItemList
 {
-    protected override DataItem newDataItem(string line)
+    protected override DataItem newDataItem(int id, string line)
     {
-        string[] parts = line.Split(',');
-        string filename = parts[0];
-        if(parts.Length >= 3)
-        {
-            float x = float.Parse(parts[1]);
-            float y = float.Parse(parts[2]);
-            return new DataItem(x, y, filename);
-        } else
-        {
-            return new DataItem(filename);
-        }
-        
+        return new DataItem(id, line);
     }
 }
-public class OldFormatDataItemQueue : DataItemQueue
+
+public class OldFormatDataItemList : DataItemList
 {
-    protected override DataItem newDataItem(string line)
+    protected override DataItem newDataItem(int id, string line)
     {
         string[] parts = line.Split(',');
-        float x = float.Parse(parts[9]);
-        float y = float.Parse(parts[12]);
-        //string filename = parts[36]; // NOT USED
-        //string id = parts[37]; // NOT USED
         string image = parts[39];
-        return new DataItem(x, y, image);
+        return new DataItem(id, image);
     }
 }
 
-abstract public class DataItemQueue {
-    protected Queue<DataItem> items;
+abstract public class DataItemList {
+    protected List<DataItem> items;
 
-    public Queue<DataItem> Items { get { return items;  } }
+    public List<DataItem> Items { get { return items;  } }
+    
+    protected abstract DataItem newDataItem(int id, string line);
 
-    protected abstract DataItem newDataItem(string line);
-
-    private Queue<DataItem> loadFileContents(string filePath)
+    private List<DataItem> loadFileContents(string filePath)
     {
-        Queue<DataItem> lst = new Queue<DataItem>();
+        List<DataItem> lst = new List<DataItem>();
         string[] lines = System.IO.File.ReadAllLines(filePath);
         for (int i = 1; i < lines.Length; i++)
         {
             var line = lines[i];
-            var item = newDataItem(line);
+            var item = newDataItem(i, line);
             if (item != null)
             {
-                lst.Enqueue(item);
+                lst.Add(item);
             }
         }
         return lst;
     }
 
-    public static DataItemQueue GetOldDataItemQueue(string filePath)
+    public static DataItemList GetOldDataItemQueue(string filePath)
     {
-        DataItemQueue q = new OldFormatDataItemQueue();
+        DataItemList q = new OldFormatDataItemList();
         q.items = q.loadFileContents(filePath);
         return q;
     }
 
-    public static DataItemQueue GetDataItemQueue(string filePath)
+    public static DataItemList GetDataItemQueue(string filePath)
     {
-        DataItemQueue q = new NewFormatDataItemQueue();
+        DataItemList q = new NewFormatDataItemList();
         q.items = q.loadFileContents(filePath);
         return q;
     }
