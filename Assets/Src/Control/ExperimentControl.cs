@@ -2,19 +2,38 @@
 using System.Collections;
 
 public class ExperimentControl : MonoBehaviour {
+    private Vector3 lastDownPos;
+    private float lastDown;
+
+    // Interval between mouse down/up for something to be a click.
+    public float clickInterval = 0.1f;
+
+    bool wasClick()
+    {
+        return Time.time - lastDown <= clickInterval;
+    }
+
     void Update()
     {
+        if (Input.GetMouseButtonDown(0)) lastDown = Time.time;
+
         if (Input.GetKeyDown(KeyCode.C))
         {
             ExperimentUtil.instance.LoadCatalog();
-        }
-        else if(Input.GetKeyDown(KeyCode.N))
-        {
-            ExperimentUtil.instance.SpawnNext();
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
             ExperimentUtil.instance.SaveExperiment();
         }
+        
+        if (Input.GetMouseButtonUp(0) && wasClick())
+        {
+            ExperimentUtil.instance.DetailView();
+        }
+        else if(Input.GetMouseButtonDown(1))
+        {
+            ExperimentUtil.instance.SpawnNext();
+        }
+        
     }
 }
