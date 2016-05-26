@@ -45,3 +45,5 @@ sysinfo.txt
 Thumbs.db.meta
 *.log
 *.log.meta
+
+*_Data
