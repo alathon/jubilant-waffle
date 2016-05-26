@@ -25,7 +25,11 @@ public class ExperimentControl : MonoBehaviour {
         {
             ExperimentUtil.instance.SaveExperiment();
         }
-        
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            ExperimentUtil.instance.ToggleTopDownView();
+        }
+
         if (Input.GetMouseButtonUp(0) && wasClick())
         {
             ExperimentUtil.instance.DetailView();

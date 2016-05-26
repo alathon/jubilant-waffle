@@ -4,22 +4,26 @@ using System.Collections;
 public class FollowPlayer : MonoBehaviour {
     public GameObject player;       //Public variable to store a reference to the player game object
     private Vector3 offset;         //Private variable to store the offset distance between the player and camera
+
     private Vector3 origEulerAngles;
+    private Vector3 origOffset;
+
     public float yOffset = 5f;
 
     void OnEnable()
     {
         origEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);
-        // Pan camera down to 90 degrees.
+        origOffset = transform.position - player.transform.position;
+
+        // Pan camera down to 90 degrees and move directly above player.
         transform.localEulerAngles = new Vector3(90f, transform.localEulerAngles.y, transform.localEulerAngles.z);
-        //Calculate and store the offset value by getting the distance between the player's position and camera's position.
-        //offset = transform.position - player.transform.position;
         offset = new Vector3(0f, yOffset, 0f);
     }
 
     void OnDisable()
     {
         transform.localEulerAngles = origEulerAngles;
+        transform.position = player.transform.position + origOffset;
     }
 
     // LateUpdate is called after Update each frame

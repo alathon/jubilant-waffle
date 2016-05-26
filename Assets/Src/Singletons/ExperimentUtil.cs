@@ -10,15 +10,14 @@ public class ExperimentUtil : MonoBehaviour {
     private DataItemList dataItems;
     private int dataItemCursor = 0;
 
-    // Used to detect click vs. drag.
-    private long lastDown;
-    private Vector3 lastDownPos;
+    private GameObject camera;
 
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
+            this.camera = GameObject.Find("Main Camera");
         }
         else if (instance != this)
         {
@@ -35,6 +34,11 @@ public class ExperimentUtil : MonoBehaviour {
         {
             // TODO: Detail view here.
         }
+    }
+
+    internal void ToggleTopDownView()
+    {
+        this.camera.GetComponent<FollowPlayer>().enabled = !this.camera.GetComponent<FollowPlayer>().enabled;
     }
 
     private DataItem GetCurrentItem()
