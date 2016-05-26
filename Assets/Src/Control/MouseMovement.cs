@@ -50,8 +50,6 @@ public class MouseMovement : MonoBehaviour {
                 {
                     if(Input.GetMouseButton(0))
                     {
-                        //Vector3 diff = targetPoint - oldPosition;
-                        //selected.GetComponent<MoveSelectable>().MoveBy(diff);
                         selected.GetComponent<MoveSelectable>().MoveTo(new Vector3(targetPoint.x, selected.transform.position.y, targetPoint.z));
                     }
                 } else

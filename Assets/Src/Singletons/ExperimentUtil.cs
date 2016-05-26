@@ -10,6 +10,10 @@ public class ExperimentUtil : MonoBehaviour {
     private DataItemList dataItems;
     private int dataItemCursor = 0;
 
+    // Used to detect click vs. drag.
+    private long lastDown;
+    private Vector3 lastDownPos;
+
     void Awake()
     {
         if (instance == null)
@@ -24,6 +28,14 @@ public class ExperimentUtil : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+    public void DetailView()
+    {
+        GameObject selected = SelectionSingleton.Selected;
+        if(selected != null)
+        {
+            // TODO: Detail view here.
+        }
+    }
 
     private DataItem GetCurrentItem()
     {
