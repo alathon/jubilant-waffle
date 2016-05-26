@@ -12,7 +12,7 @@ public class ExperimentControl : MonoBehaviour {
     {
         return Time.time - lastDown <= clickInterval;
     }
-
+    
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) lastDown = Time.time;
@@ -34,7 +34,7 @@ public class ExperimentControl : MonoBehaviour {
         {
             ExperimentUtil.instance.DetailView();
         }
-        else if(Input.GetMouseButtonDown(1))
+        else if(Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.N))
         {
             ExperimentUtil.instance.SpawnNext();
         }
