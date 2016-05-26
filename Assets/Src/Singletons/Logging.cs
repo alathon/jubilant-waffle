@@ -6,15 +6,14 @@ using System.Threading;
 using System;
 using System.Collections.Generic;
 
-public class LogEvent
+abstract public class LogEvent
 {
-    public readonly object Source;
     public readonly double Time;
 
-    public LogEvent(object source, double time)
+    public LogEvent()
     {
-        this.Source = source;
-        this.Time = time;
+        double ms = DateTime.UtcNow.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+        this.Time = ms;
     }
 }
 
@@ -25,7 +24,7 @@ public class Logging : MonoBehaviour {
     private static Mutex mut = new Mutex();
     private StringBuilder sb = new StringBuilder();
     private int counter = 0;
-    public LinkedList<LogEvent> Events { get { return events; } }
+    public static LinkedList<LogEvent> Events { get { return instance.events; } }
 
     void Awake()
     {
@@ -42,8 +41,6 @@ public class Logging : MonoBehaviour {
         // Clear current log.
         File.Delete(Application.dataPath + "/" + Logging.instance.filePath);
     }
-
-
 
     void OnApplicationQuit()
     {
@@ -80,13 +77,12 @@ public class Logging : MonoBehaviour {
         mut.ReleaseMutex();
     }
 
-    public static void Log(object data)
+    public static void Log(LogEvent data)
     {
-        double ms = DateTime.UtcNow.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
         mut.WaitOne();
-        var text = string.Format("[{0}] {1}\n", ms, data);
+        var text = string.Format("[{0}] {1}\n", data.Time, data);
         Logging.instance.sb.Append(text);
-        Logging.instance.events.AddLast(new LogEvent(data, ms));
+        Logging.instance.events.AddLast(data);
         mut.ReleaseMutex();
     }
 
@@ -95,6 +91,23 @@ public class Logging : MonoBehaviour {
         Logging.instance.flush();
         mut.WaitOne();
         File.Copy(Application.dataPath + "/" + Logging.instance.filePath, Application.dataPath + "/" + otherPath);
+        mut.ReleaseMutex();
+    }
+
+    public static void LoadLog(string[] lines, LinkedList<LogEvent> events)
+    {
+        mut.WaitOne();
+        // Clear current log.
+        File.Delete(Application.dataPath + "/" + Logging.instance.filePath);
+        // Append lines.
+        Logging.instance.sb.Length = 0;
+        foreach(var line in lines)
+        {
+            Logging.instance.sb.Append(line);
+        }
+        // Set events.
+        Logging.instance.events = events;
+        // Release hold.
         mut.ReleaseMutex();
     }
 }

@@ -26,7 +26,7 @@ public class SelectionSingleton : MonoBehaviour {
 			SelectionSingleton.Deselect (SelectionSingleton.instance.selected);
 		}
 
-        Logging.Log(string.Format("Selected {0}", o.name));
+        Logging.LogText(string.Format("Selected {0}", o.name));
 		SelectionSingleton.instance.selected = o;
 		o.GetComponent<SelectionIndicator> ().Activate ();
 	}

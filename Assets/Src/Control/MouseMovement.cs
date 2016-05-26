@@ -10,12 +10,12 @@ public class MouseMovement : MonoBehaviour {
     float zMin = 0f;
     float zMax = 10f;
     
-    public class MouseMovementEvent
+    public class MouseMovementEvent : LogEvent
     {
         public readonly Vector3 from;
         public readonly Vector3 to;
 
-        public MouseMovementEvent(Vector3 from, Vector3 to)
+        public MouseMovementEvent(Vector3 from, Vector3 to) : base()
         {
             this.from = from;
             this.to = to;

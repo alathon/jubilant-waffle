@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RigidbodyMovementEvent
+public class RigidbodyMovementEvent : LogEvent
 {
     public readonly Vector3 from;
     public readonly Vector3 to;
-    public readonly double time;
 
-    public RigidbodyMovementEvent(Vector3 from, Vector3 to)
+    public RigidbodyMovementEvent(Vector3 from, Vector3 to) : base()
     {
         this.from = from;
         this.to = to;

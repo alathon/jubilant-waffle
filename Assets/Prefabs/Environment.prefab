@@ -13,7 +13,7 @@ GameObject:
   - 23: {fileID: 2398054}
   - 114: {fileID: 11485496}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Player Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ GameObject:
   - 114: {fileID: 11445358}
   - 114: {fileID: 11483564}
   m_Layer: 0
-  m_Name: Mouse
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,14 +186,14 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 191090}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 93b8ab7c4df0f0a4ab2e1f988e29b134, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
@@ -286,7 +286,7 @@ MonoBehaviour:
   dataPort: 1511
   commandPort: 1510
   NatNetVersion: 2.9.0.0
-  showDebugObject: 1
+  showDebugObject: 0
   updateModelDefTime: 60
 --- !u!114 &11483564
 MonoBehaviour:
@@ -299,6 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f04eb4ee02c3ca41bbac8360bfb986d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clickInterval: 0.1
 --- !u!114 &11485496
 MonoBehaviour:
   m_ObjectHideFlags: 1

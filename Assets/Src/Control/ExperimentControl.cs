@@ -19,7 +19,7 @@ public class ExperimentControl : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            ExperimentUtil.instance.LoadCatalog();
+            ExperimentUtil.instance.LoadStateFromLog();
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
@@ -29,7 +29,14 @@ public class ExperimentControl : MonoBehaviour {
         {
             ExperimentUtil.instance.ToggleTopDownView();
         }
-
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            ExperimentUtil.instance.ToggleMovementMethod();
+        }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            ExperimentUtil.instance.LoadExperimentFile();
+        }
         if (Input.GetMouseButtonUp(0) && wasClick())
         {
             ExperimentUtil.instance.DetailView();

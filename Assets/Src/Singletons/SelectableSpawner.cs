@@ -3,20 +3,28 @@ using System.Collections;
 using System;
 
 public class SelectableSpawner : MonoBehaviour {
-    public class SpawnEvent
+    public class SpawnEvent : LogEvent
     {
         public readonly string imageName;
         public readonly int id;
 
-        public SpawnEvent(int id, string imageName)
+        public SpawnEvent(int id, string imageName) : base()
         {
             this.id = id;
             this.imageName = imageName;
         }
 
+        // Spawn item 1 Images/038097827X.01.MZZZZZZZ.jpg
+        public static LogEvent FromParts(string[] parts)
+        {
+            var id = int.Parse(parts[3]);
+            var path = parts[4];
+            return new SpawnEvent(id, path);
+        }
+
         public override string ToString()
         {
-            return string.Format("Spawned item {0} (Image path: {1})", id, imageName);
+            return string.Format("Spawn item {0} {1}", id, imageName);
         }
     }
 
@@ -45,13 +53,13 @@ public class SelectableSpawner : MonoBehaviour {
 
     public Vector3 defaultLocation;
 
-    public static GameObject Spawn(int id, string imageName)
+    public static GameObject Spawn(int id, string imageName, bool log = true)
     {
         var filePath = Application.dataPath + "\\" + instance.dataFolderPath + imageName;
         if (System.IO.File.Exists(filePath))
         {
             GameObject spawned = (GameObject)Instantiate(instance.prefab, instance.defaultLocation, Quaternion.identity);
-            spawned.name = "Item " + id;
+            spawned.name = id + "";
 
             // Create material for image.
             Material newMat = new Material(Shader.Find("Standard"));
@@ -64,7 +72,7 @@ public class SelectableSpawner : MonoBehaviour {
             // Move to proper location.
             spawned.transform.SetParent(instance.spawnParent.transform);
 
-            Logging.Log(new SpawnEvent(id, imageName));
+            if(log) Logging.Log(new SpawnEvent(id, imageName));
             return spawned;
         }
         else throw new Exception("No image at " + filePath);
