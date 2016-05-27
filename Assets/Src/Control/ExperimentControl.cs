@@ -17,9 +17,9 @@ public class ExperimentControl : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0)) lastDown = Time.time;
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.L))
         {
-            ExperimentUtil.instance.LoadStateFromLog();
+            ExperimentUtil.instance.LoadExperimentFromLog();
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
@@ -33,9 +33,9 @@ public class ExperimentControl : MonoBehaviour {
         {
             ExperimentUtil.instance.ToggleMovementMethod();
         }
-        else if (Input.GetKeyDown(KeyCode.L))
+        else if (Input.GetKeyDown(KeyCode.C))
         {
-            ExperimentUtil.instance.LoadExperimentFile();
+            ExperimentUtil.instance.StartNewExperiment();
         }
         if (Input.GetMouseButtonUp(0) && wasClick())
         {

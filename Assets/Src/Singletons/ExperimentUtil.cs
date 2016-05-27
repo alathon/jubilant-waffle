@@ -45,7 +45,7 @@ public class ExperimentUtil : MonoBehaviour {
         }
     }
     
-    internal void LoadExperimentFile()
+    internal void StartNewExperiment()
     {
         if (this.experimentWindowOpen) return;
 
@@ -135,7 +135,7 @@ public class ExperimentUtil : MonoBehaviour {
         // TODO: Activate detail view for item.
     }
     
-    public void LoadStateFromLog()
+    public void LoadExperimentFromLog()
     {
         FileSelector.GetFile((status, path) =>
         {
