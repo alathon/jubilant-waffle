@@ -103,7 +103,7 @@ public class Logging : MonoBehaviour {
         Logging.instance.sb.Length = 0;
         foreach(var line in lines)
         {
-            Logging.instance.sb.Append(line);
+            Logging.instance.sb.AppendLine(line);
         }
         // Set events.
         Logging.instance.events = events;

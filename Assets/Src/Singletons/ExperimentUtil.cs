@@ -15,7 +15,7 @@ public class ExperimentUtil : MonoBehaviour {
 
     // File loading.
     private GUIStyle style;
-    private bool windowOpen;
+    private bool experimentWindowOpen;
     private string path = "";
 
     void Awake()
@@ -23,7 +23,7 @@ public class ExperimentUtil : MonoBehaviour {
         if (instance == null)
         {
             instance = this;
-            this.windowOpen = false;
+            this.experimentWindowOpen = false;
             this.style = new GUIStyle();
             this.style.fontSize = 40;
             this.style.normal.textColor = Color.white;
@@ -47,15 +47,17 @@ public class ExperimentUtil : MonoBehaviour {
     
     internal void LoadExperimentFile()
     {
+        if (this.experimentWindowOpen) return;
+
         FileSelector.GetFile((status, path) =>
         {
-            this.windowOpen = false;
+            this.experimentWindowOpen = false;
             if (status == FileSelector.Status.Successful)
             {
                 StartCoroutine(LoadExperiment.LoadExperimentByPath(path, true));
             }
         }, ".exp");
-        this.windowOpen = true;
+        this.experimentWindowOpen = true;
     }
 
     public void SetCameraMethod(string method)
@@ -137,13 +139,16 @@ public class ExperimentUtil : MonoBehaviour {
     {
         FileSelector.GetFile((status, path) =>
         {
-            this.windowOpen = false;
+            this.experimentWindowOpen = false;
             if (status == FileSelector.Status.Successful)
             {
-                RestoreFromLog.ByPath(path);
+                RestoreFromLog.ByPath(path, (numItems) =>
+                {
+                    this.dataItemCursor = numItems;
+                });
             }
         }, ".log");
-        this.windowOpen = true;
+        this.experimentWindowOpen = true;
     }
     
     public void LoadCatalog(string path)

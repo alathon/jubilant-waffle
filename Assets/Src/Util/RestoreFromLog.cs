@@ -4,7 +4,22 @@ using UnityEngine.SceneManagement;
 using System.IO;
 using System.Collections.Generic;
 
-public static class RestoreFromLog {
+public class RestoreFromLog : MonoBehaviour {
+    public static RestoreFromLog instance = null;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
+    }
 
     private static LinkedList<LogEvent> RecreateEvents(string[] lines)
     {
@@ -15,7 +30,6 @@ public static class RestoreFromLog {
             var timeEnd = line.IndexOf(']');
             var time = double.Parse(line.Substring(timeStart+1, timeEnd-1));
             var eventText = line.Substring(timeEnd + 1);
-            Debug.Log("Event: " + eventText);
             var parts = eventText.Split(' ');
             LogEvent eventObj = null;
             switch (parts[1])
@@ -27,7 +41,6 @@ public static class RestoreFromLog {
                     eventObj = MoveSelectable.MoveSelectableEvent.FromParts(parts);
                     break;
                 default:
-                    Debug.Log("Ignoring " + eventText);
                     break;
             }
             if (eventObj != null)
@@ -44,40 +57,43 @@ public static class RestoreFromLog {
         {
             if (!line.Contains("Loaded experiment")) continue;
 
-            var endOfTime = lines[0].IndexOf(']');
+            var endOfTime = lines[0].IndexOf(']') + 1;
             var offset = " Loaded experiment ".Length;
             return lines[0].Substring(endOfTime + offset);
         }
         return null;
     }
 
-    public static void ByPath(string path)
+    public static void ByPath(string path, System.Action<int> callback)
+    {
+        instance.StartCoroutine(instance._restoreByPath(path, callback));
+    }
+
+    private IEnumerator _restoreByPath(string path, System.Action<int> callback)
     {
         // Step: Load log file at path.
         Debug.Log("Loading log file: " + path);
         string[] lines = File.ReadAllLines(path);
 
         // Step: Grab experiment path
-        
         string experimentPath = GetExperimentPath(lines);
-        
         
         if (experimentPath == null)
         {
             Debug.Log("ERROR: No experiment was loaded in the log file. Aborting.");
-            return;
+            yield break;
         }
 
         // Step: Load experiment.
         Debug.Log("Loading experiment at " + experimentPath);
-        LoadExperiment.LoadExperimentByPath(experimentPath, false);
+        yield return LoadExperiment.LoadExperimentByPath(experimentPath, false);
 
         // Step: Recreate all events.
         Debug.Log("Recreating events.");
         LinkedList<LogEvent> events = RecreateEvents(lines);
 
         Debug.Log("Re-loading log based on events and prior log.");
-        //Logging.LoadLog(lines, events);
+        Logging.LoadLog(lines, events);
 
         // Step: Scan for spawns, spawn again.
         Debug.Log("Re-spawning initial objects.");
@@ -97,7 +113,7 @@ public static class RestoreFromLog {
         // Step: Scan backwards for moves, move each
         Debug.Log("Scanning backwards for move events.");
         var elm = events.Last;
-        while(elm != null)
+        while(true)
         {
             if(elm.Value is MoveSelectable.MoveSelectableEvent)
             {
@@ -108,6 +124,12 @@ public static class RestoreFromLog {
                     gObj.transform.localPosition = move.To;
                 }
             }
+            if (elm == elm.List.First)
+                break;
+            else
+                elm = elm.Previous;
         }
+
+        callback(gameObjs.Count);
     }
 }

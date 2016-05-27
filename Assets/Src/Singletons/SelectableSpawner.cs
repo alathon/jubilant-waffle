@@ -28,11 +28,12 @@ public class SelectableSpawner : MonoBehaviour {
         }
     }
 
-    public static SelectableSpawner instance = null;
+    
     public string dataFolderPath = "Data\\";
 
     private GameObject spawnParent;
 
+    public static SelectableSpawner instance = null;
     void Awake()
     {
         if (instance == null)
