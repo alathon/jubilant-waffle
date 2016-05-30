@@ -23,6 +23,12 @@ public class FollowPlayer : MonoBehaviour {
     public float yOffset = 5f;
     private Vector2 screenMiddle;
 
+    public void SetYOffset(float offset)
+    {
+        this.yOffset = offset;
+        this.offset = new Vector3(0f, yOffset, 0f);
+    }
+
     void OnEnable()
     {
         player = GameObject.Find("Player");

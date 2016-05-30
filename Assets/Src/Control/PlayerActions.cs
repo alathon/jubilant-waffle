@@ -9,6 +9,12 @@ public class PlayerActions : MonoBehaviour {
     private Vector3 lastDownPos;
     private float lastDown;
     private GameObject detailViewSpawned;
+    private FollowPlayer followPlayer;
+
+    void Awake()
+    {
+        followPlayer = GameObject.Find("Main Camera").GetComponent<FollowPlayer>();
+    }
 
     // Interval between mouse down/up for something to be a click.
     public float clickInterval = 0.1f;
@@ -20,6 +26,14 @@ public class PlayerActions : MonoBehaviour {
 
     void Update () {
         if (Input.GetMouseButtonDown(0)) lastDown = Time.time;
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            followPlayer.SetYOffset(followPlayer.yOffset - 0.25f);
+        } else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            followPlayer.SetYOffset(followPlayer.yOffset + 0.25f);
+        }
 
         if (Input.GetMouseButtonUp(0) && wasClick())
         {
