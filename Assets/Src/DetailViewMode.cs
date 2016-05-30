@@ -44,7 +44,8 @@ public class DetailViewMode : MonoBehaviour {
         if (isTransforming) return;
 
         this.isTransforming = true;
-        //this.experimentCtrl.TogglePlayerCollision();
+        this.player.GetComponent<Movement>().enabled = false;
+        this.player.GetComponentInChildren<PlayerCollision>().enabled = false;
 
         if (isGrown)
         {
@@ -66,8 +67,6 @@ public class DetailViewMode : MonoBehaviour {
             this.target = midway;
             this.originalPos = this.detailView.transform.position;
         }
-
-        
         
         this.startTime = Time.time;
         this.journeyLength = Vector3.Distance(this.detailView.transform.position, this.target);
@@ -84,8 +83,13 @@ public class DetailViewMode : MonoBehaviour {
             {
                 this.isTransforming = false;
                 this.isGrown = !this.isGrown;
-                GameObject.Destroy(this.detailView);
-                this.detailView = null;
+
+                if(!this.isGrown)
+                {
+                    GameObject.Destroy(this.detailView);
+                    this.player.GetComponent<Movement>().enabled = true;
+                    this.player.GetComponentInChildren<PlayerCollision>().enabled = true;
+                }
             }
         }
     }
