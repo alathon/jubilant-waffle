@@ -36,6 +36,12 @@ public static class LoadExperiment {
         var camera = expValues["camera"];
         var catalog = expValues["catalog"];
 
+        if (movement == "mouse")
+        {
+            if (camera == "wide") movement = "mouse_abs";
+            else if (camera == "topdown") movement = "mouse_rel";
+        }
+
         ExperimentUtil.instance.SetMovementMethod(movement);
         ExperimentUtil.instance.SetCameraMethod(camera);
         ExperimentUtil.instance.LoadCatalog(catalog);
