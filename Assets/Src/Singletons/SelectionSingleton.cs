@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
+/**
+ * Simple singleton to keep track of what is currently selected.
+ */
 public class SelectionSingleton : MonoBehaviour {
 	public static SelectionSingleton instance = null;
 	private GameObject selected = null;

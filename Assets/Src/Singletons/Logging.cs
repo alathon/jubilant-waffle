@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System;
 using System.Collections.Generic;
 
+/** Generic class for log events, to be extended. **/
 abstract public class LogEvent
 {
     public readonly double Time;
@@ -17,6 +17,9 @@ abstract public class LogEvent
     }
 }
 
+/**
+ * Logging singleton
+ */
 public class Logging : MonoBehaviour {
     private static Logging instance;
     public string filePath;

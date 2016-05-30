@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 
+/**
+ * A DataItem is basically an ID tied to an image file path.
+ */
 public class DataItem
 {
     public readonly int id;
@@ -11,6 +14,8 @@ public class DataItem
     }
 }
 
+/** The new format is simply the image path as the only
+ * entry. */
 public class NewFormatDataItemList : DataItemList
 {
     protected override DataItem newDataItem(int id, string line)
@@ -19,6 +24,8 @@ public class NewFormatDataItemList : DataItemList
     }
 }
 
+/** The old format is based on the .CSV file format Yvonne delivered,
+ * where column 40 is the image path. */
 public class OldFormatDataItemList : DataItemList
 {
     protected override DataItem newDataItem(int id, string line)
@@ -29,6 +36,11 @@ public class OldFormatDataItemList : DataItemList
     }
 }
 
+/**
+ * A DataItemList is just a wrapper around some number of items,
+ * that we can load from a file; either based on the old format or
+ * the new format. Use by calling the static methods at the bottom.
+ */
 abstract public class DataItemList {
     protected List<DataItem> items;
 

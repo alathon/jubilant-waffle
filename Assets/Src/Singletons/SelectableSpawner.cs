@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 
+/**
+ * Singleton for spawning items. You can set the prefab to use,
+ * the default location for spawned items to appear at,
+ * and the data folder path
+ */
 public class SelectableSpawner : MonoBehaviour {
     public class SpawnEvent : LogEvent
     {
@@ -13,8 +17,7 @@ public class SelectableSpawner : MonoBehaviour {
             this.id = id;
             this.imageName = imageName;
         }
-
-        // Spawn item 1 Images/038097827X.01.MZZZZZZZ.jpg
+        
         public static LogEvent FromParts(string[] parts)
         {
             var id = int.Parse(parts[3]);
@@ -28,12 +31,12 @@ public class SelectableSpawner : MonoBehaviour {
         }
     }
 
-    
     public string dataFolderPath = "Data\\";
-
-    private GameObject spawnParent;
-
     public static SelectableSpawner instance = null;
+    public GameObject prefab;
+    public Vector3 defaultLocation;
+    private GameObject spawnParent;
+    
     void Awake()
     {
         if (instance == null)
@@ -49,11 +52,7 @@ public class SelectableSpawner : MonoBehaviour {
 
         instance.spawnParent = GameObject.Find("Environment/Objects");
     }
-
-    public GameObject prefab;
-
-    public Vector3 defaultLocation;
-
+    
     public static GameObject Spawn(int id, string imageName, bool log = true)
     {
         var filePath = Application.dataPath + "\\" + instance.dataFolderPath + imageName;

@@ -4,6 +4,12 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
+/** Static helper method to load an experiment.
+ * Returns an IEnumerator, since it expects to be run as
+ * a Coroutine() so that we can yield to wait for a time period.
+ * The wait is necessary, as LoadScene() returns immediately and does
+ * not wait for the scene to actually be loaded.
+ **/
 public static class LoadExperiment {
     
     public static IEnumerator LoadExperimentByPath(string path, bool log)

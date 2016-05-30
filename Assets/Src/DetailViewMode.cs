@@ -1,15 +1,31 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+/** Detail view is accomplished by doing the following:
+ *  - To GROW (i.e. show) detail view:
+ *    - Create a new GameObject with the same material as this GameObject.
+ *    - Set its destination to the cameras position.
+ *    - Move it using Vector3.Lerp in Update()
+ *  - To SHRINK (i.e. cancel) detail view:
+ *    - Set destination to the original position of the item.
+ *    - Move it using vector3.Lerp in Update()
+ *    
+ *  While growing or shrinking, mouse movement is disabled.
+ *  TODO: Hide mouse cursor while growing/shrinking.
+ *  
+ *  TODO: There is slight flickering on detail view activation,
+ *  presumably from the object being created. Consider setting the
+ *  MeshRenderer of the prefab to disabled by default, and then enable it
+ *  once the material has been set. It might also be because the two items
+ *  overlap for an instance, in which case move it slightly above the original
+ *  item.
+ */
 public class DetailViewMode : MonoBehaviour {
     public float growAnimationTime = 3f;
     public float shrinkAnimationTime = 1.5f;
     public float scaleMultiplier = 6f;
     private Transform dataItem;
-    private Camera camera;
 
     private Vector3 originalPos;
-    private Vector3 originalScale;
 
     private Vector3 target;
     private bool isGrown = false;
@@ -25,7 +41,6 @@ public class DetailViewMode : MonoBehaviour {
     void Awake()
     {
         this.dataItem = transform.GetChild(0);
-        this.camera = Camera.main;
         this.player = GameObject.Find("Player");
         this.experimentCtrl = this.player.GetComponent<ExperimentControl>();
     }
@@ -59,7 +74,7 @@ public class DetailViewMode : MonoBehaviour {
             }
 
             CreateDetailView();
-            Vector3 centerPoint = camera.ScreenToWorldPoint(
+            Vector3 centerPoint = Camera.main.ScreenToWorldPoint(
                 new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
             Vector3 A = this.detailView.transform.position;
             Vector3 B = centerPoint;

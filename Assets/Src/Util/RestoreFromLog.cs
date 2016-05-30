@@ -1,9 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
 using System.IO;
 using System.Collections.Generic;
 
+/** Script to restore state based on a log file.
+ *  The steps needed to do this can be seen in
+ *  RestoreFromLog._restoreByPath(), but the gist is
+ *  as follows:
+ *    - Reload scene to clear everything. 
+ *    - Load experiment settings based on experiment file.
+ *    - Spawn all the items that were spawned in the log file.
+ *    - Move all the items based on their very last move event.
+ **/
 public class RestoreFromLog : MonoBehaviour {
     public static RestoreFromLog instance = null;
 

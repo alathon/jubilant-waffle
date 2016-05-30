@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System;
 
+/**
+ * A utility class for a number of different purposes,
+ * including keeping track of which data item the experiment
+ * is currently on.
+ * 
+ * TODO: The data item state should be moved out of this class
+ * for modularity/simplicity. Not strictly
+ * necessary, just cleaner.
+ */
 public class ExperimentUtil : MonoBehaviour {
     public static ExperimentUtil instance = null;
 
