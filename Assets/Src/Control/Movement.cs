@@ -12,6 +12,11 @@
  * was last, and moving the player by that offset. The reason this does
  * not use Input.GetAxis to calculate the offset is that this does not
  * work on Virtual Machines or over remote connections.
+ * Please see http://forum.unity3d.com/threads/input-getaxis-mouse-x-and-y-axis-equivalent-dont-work-in-remote-desktop.115526/
+ * for more information. You *can* switch over to GetAxis if you are okay
+ * with not being able to remotely connect to the machine running the experiment
+ * for testing. Ideally there should be a debug switch for this in the code,
+ * where you can switch between using GetAxis() and the current method.
  * 
  * RIGIDBODY works by mapping the rigidbody movements (which come from the
  * MotiveDirect script) to the ground objects coordinates, which by default
