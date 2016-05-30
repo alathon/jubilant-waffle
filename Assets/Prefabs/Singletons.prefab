@@ -12,6 +12,7 @@ GameObject:
   - 114: {fileID: 11425528}
   - 114: {fileID: 11473984}
   - 114: {fileID: 11415506}
+  - 114: {fileID: 11466606}
   m_Layer: 0
   m_Name: Singletons
   m_TagString: Untagged
@@ -42,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62862fe5d4e0f5948baa88b2bb9b6b7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  catalogPath: Assets/test.cat
+  catalogPath: Catalogs\test.cat
 --- !u!114 &11425528
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -54,7 +55,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0a022a63089c7438d1c1dc8e71fbd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filePath: test.txt
+  filePath: Logs\current.log
 --- !u!114 &11463030
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -64,6 +65,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f29fd8d43a453c4abed658a873bbdcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11466606
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 197662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6dde30c3a98d044b1a518572e8b12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11473984
@@ -77,8 +89,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 817b7fb3cb048d640976cb0d79e665e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataFolderPath: Assets\Data\
-  prefab: {fileID: 183656, guid: d301e335c98baba44ac0cc9e93c904c5, type: 2}
+  dataFolderPath: Data\
+  prefab: {fileID: 154766, guid: d301e335c98baba44ac0cc9e93c904c5, type: 2}
   defaultLocation: {x: 5, y: 0.525, z: 5}
 --- !u!1001 &100100000
 Prefab:

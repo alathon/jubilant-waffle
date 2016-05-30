@@ -3,16 +3,21 @@
 /**
  * Controls the movement of the player.
  * 
- * There are two movement types: MOUSE and RIGIDBODY.
+ * There are three movement types: MOUSE_ABS, MOUSE_REL and RIGIDBODY.
  * 
- * MOUSE works by projecting a ray from the camera centre and onto a
+ * MOUSE_ABS works by projecting a ray from the camera centre and onto a
  * plane based on the players current position.
+ * 
+ * MOUSE_REL works by calculating a by-frame offset from where the mouse
+ * was last, and moving the player by that offset. The reason this does
+ * not use Input.GetAxis to calculate the offset is that this does not
+ * work on Virtual Machines or over remote connections.
  * 
  * RIGIDBODY works by mapping the rigidbody movements (which come from the
  * MotiveDirect script) to the ground objects coordinates, which by default
  * are between 0 and 10 on the X and Y axis.
  * 
- * Movement is only considered movement if the MOUSE or RIGIDBODY has
+ * Movement is only considered movement if we have
  * moved more than a certain threshold. You can set this threshold in
  * the MaybeMoveTo method (the Vector3.Distance check), or remove it
  * entirely there. The reason for it is to not generate an excessive
@@ -20,22 +25,28 @@
  * still. Especially RIGIDBODY movements occur all the time, every frame.
  */
 public class Movement : MonoBehaviour {
-    public enum MovementType {  MOUSE, RIGIDBODY };
+    public enum MovementType {  MOUSE_ABS, MOUSE_REL, RIGIDBODY };
 
-    public MovementType movementType = MovementType.MOUSE;
-    public string rigidbodyName = "Rigid Body 1";
-    public int checkInterval = 10;
+    public MovementType movementType = MovementType.MOUSE_ABS;
+    public string rigidbodyName = "Rigid Body 1"; // name of rigidbody in Motive.
+    public int checkInterval = 10; // How many ms between checking for the rigidbody presence.
+    public float relativeSpeed = 0.05f; // Dampening factor on relative movements.
 
     GameObject ground;
     PlayerCollision playerCollision;
     private GameObject rigidBody;
     private GroundMapping groundMapper;
     private int checkCounter = 0;
-    float xMin = 0f;
-    float xMax = 10f;
-    float zMin = 0f;
-    float zMax = 10f;
+
     
+    private float xMin;
+    private float xMax;
+    private float zMin;
+    private float zMax;
+
+    // Works around remote desktop limitations
+    private Vector2 lastMouseAxis;
+
     public class MovementEvent : LogEvent
     {
         public readonly Vector3 from;
@@ -60,6 +71,10 @@ public class Movement : MonoBehaviour {
         playerCollision = this.GetComponentInChildren<PlayerCollision>();
         ground = GameObject.Find("Ground");
         groundMapper = ground.GetComponent<GroundMapping>();
+        this.xMin = 0;
+        this.xMax = groundMapper.quadXSize;
+        this.zMin = 0;
+        this.zMax = groundMapper.quadYSize;
     }
 
     private void MaybeMoveTo(Vector3 pos)
@@ -87,15 +102,32 @@ public class Movement : MonoBehaviour {
 
     private void MouseUpdate()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane playerPlane = new Plane(Vector3.up, transform.position);
-        float hitdist = 0.0f;
-        if (playerPlane.Raycast(ray, out hitdist))
+        if(this.movementType == MovementType.MOUSE_REL)
         {
-            Vector3 i = ray.GetPoint(hitdist);
-            Vector3 targetPoint = new Vector3(Mathf.Clamp(i.x, zMin, zMax), transform.position.y, Mathf.Clamp(i.z, xMin, xMax));
-            //Vector3 oldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            this.MaybeMoveTo(targetPoint);
+            if (lastMouseAxis != null)
+            {
+                Vector3 newAxis = new Vector3(Input.mousePosition.x - lastMouseAxis.x,
+                0f, Input.mousePosition.y - lastMouseAxis.y);
+                this.lastMouseAxis = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+                Vector3 dest = this.transform.localPosition + newAxis * this.relativeSpeed;
+                dest = new Vector3(Mathf.Clamp(dest.x, zMin, zMax), dest.y, Mathf.Clamp(dest.z, zMin, zMax));
+                this.MaybeMoveTo(dest);
+            }
+            else
+            {
+                lastMouseAxis = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            }
+        } else if(this.movementType == MovementType.MOUSE_ABS)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Plane playerPlane = new Plane(Vector3.up, transform.position);
+            float hitdist = 0.0f;
+            if (playerPlane.Raycast(ray, out hitdist))
+            {
+                Vector3 i = ray.GetPoint(hitdist);
+                Vector3 targetPoint = new Vector3(Mathf.Clamp(i.x, zMin, zMax), transform.position.y, Mathf.Clamp(i.z, xMin, xMax));
+                this.MaybeMoveTo(targetPoint);
+            }
         }
     }
     
@@ -118,14 +150,12 @@ public class Movement : MonoBehaviour {
 	void Update () {
 		switch(this.movementType)
         {
-            case MovementType.MOUSE:
+            case MovementType.MOUSE_ABS:
+            case MovementType.MOUSE_REL:
                 this.MouseUpdate();
                 break;
             case MovementType.RIGIDBODY:
                 this.RigidbodyUpdate();
-                break;
-            default:
-                this.MouseUpdate();
                 break;
         }
 	}

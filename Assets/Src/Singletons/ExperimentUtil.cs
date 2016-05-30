@@ -75,7 +75,20 @@ public class ExperimentUtil : MonoBehaviour {
     internal void ToggleTopDownView()
     {
         var mainCamera = GameObject.Find("Main Camera");
-        mainCamera.GetComponent<FollowPlayer>().enabled = !mainCamera.GetComponent<FollowPlayer>().enabled;
+        FollowPlayer fp = mainCamera.GetComponent<FollowPlayer>();
+        fp.enabled = !fp.enabled;
+        var player = GameObject.Find("Player");
+        var movement = player.GetComponent<Movement>();
+        if (fp.enabled)
+        {
+            if (movement.movementType != Movement.MovementType.RIGIDBODY)
+                movement.movementType = Movement.MovementType.MOUSE_REL;
+        } else
+        {
+            if (movement.movementType != Movement.MovementType.RIGIDBODY)
+                movement.movementType = Movement.MovementType.MOUSE_ABS;
+        }
+        
     }
 
     public void SetMovementMethod(string method)
@@ -83,29 +96,40 @@ public class ExperimentUtil : MonoBehaviour {
         Debug.Log("SetMovementMethod " + method);
         var player = GameObject.Find("Player");
         var movement = player.GetComponent<Movement>();
-        if (method.Equals("mouse"))
+
+        switch(method)
         {
-            movement.movementType = Movement.MovementType.MOUSE;
-        } else if(method.Equals("rigidbody"))
-        {
-            movement.movementType = Movement.MovementType.RIGIDBODY;
+            case "mouse_abs":
+                movement.movementType = Movement.MovementType.MOUSE_ABS;
+                break;
+            case "mouse_rel":
+                movement.movementType = Movement.MovementType.MOUSE_REL;
+                break;
+            case "rigidbody":
+                movement.movementType = Movement.MovementType.RIGIDBODY;
+                break;
         }
     }
 
-    // If both are enabled/disabled, enable mouse movement as only one
-    // Otherwise, toggle both (i.e. disable one, enable other).
+    // Toggles between mouse and rigidbody movement.
     internal void ToggleMovementMethod()
     {
         Debug.Log("ToggleMovementMethod");
         var player = GameObject.Find("Player");
         var movement= player.GetComponent<Movement>();
 
-        if(movement.movementType == Movement.MovementType.MOUSE)
+        if(movement.movementType == Movement.MovementType.MOUSE_ABS
+            || movement.movementType == Movement.MovementType.MOUSE_REL)
         {
             movement.movementType = Movement.MovementType.RIGIDBODY;
         } else
         {
-            movement.movementType = Movement.MovementType.MOUSE;
+            var mainCamera = GameObject.Find("Main Camera");
+            FollowPlayer fp = mainCamera.GetComponent<FollowPlayer>();
+            if (fp.enabled)
+                movement.movementType = Movement.MovementType.MOUSE_REL;
+            else
+                movement.movementType = Movement.MovementType.MOUSE_ABS;
         }
     }
 

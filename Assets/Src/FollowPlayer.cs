@@ -20,8 +20,8 @@ public class FollowPlayer : MonoBehaviour {
 
     private Vector3 origEulerAngles;
     private Vector3 origOffset;
-
     public float yOffset = 5f;
+    private Vector2 screenMiddle;
 
     void OnEnable()
     {
