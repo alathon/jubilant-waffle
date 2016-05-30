@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class FollowPlayer : MonoBehaviour {
-    public GameObject player;       //Public variable to store a reference to the player game object
+    private GameObject player;       
     private Vector3 offset;         //Private variable to store the offset distance between the player and camera
 
     private Vector3 origEulerAngles;
@@ -12,6 +12,7 @@ public class FollowPlayer : MonoBehaviour {
 
     void OnEnable()
     {
+        player = GameObject.Find("Player");
         origEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);
         origOffset = transform.position - player.transform.position;
 

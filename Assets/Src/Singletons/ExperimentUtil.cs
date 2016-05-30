@@ -41,7 +41,7 @@ public class ExperimentUtil : MonoBehaviour {
         GameObject selected = SelectionSingleton.Selected;
         if(selected != null)
         {
-            // TODO: Detail view here.
+            selected.GetComponent<DetailViewMode>().GrowOrShrink();
         }
     }
     
@@ -76,16 +76,13 @@ public class ExperimentUtil : MonoBehaviour {
     {
         Debug.Log("SetMovementMethod " + method);
         var player = GameObject.Find("Player");
-        var rigidbodyMovement = player.GetComponent<RigidbodyMovement>();
-        var mouseMovement = player.GetComponent<MouseMovement>();
+        var movement = player.GetComponent<Movement>();
         if (method.Equals("mouse"))
         {
-            rigidbodyMovement.enabled = false;
-            mouseMovement.enabled = true;
+            movement.movementType = Movement.MovementType.MOUSE;
         } else if(method.Equals("rigidbody"))
         {
-            rigidbodyMovement.enabled = true;
-            mouseMovement.enabled = false;
+            movement.movementType = Movement.MovementType.RIGIDBODY;
         }
     }
 
@@ -95,18 +92,14 @@ public class ExperimentUtil : MonoBehaviour {
     {
         Debug.Log("ToggleMovementMethod");
         var player = GameObject.Find("Player");
-        var rigidbodyMovement = player.GetComponent<RigidbodyMovement>();
-        var mouseMovement = player.GetComponent<MouseMovement>();
+        var movement= player.GetComponent<Movement>();
 
-        if((mouseMovement.enabled && rigidbodyMovement.enabled) ||
-            (mouseMovement.enabled == false && rigidbodyMovement.enabled == false))
+        if(movement.movementType == Movement.MovementType.MOUSE)
         {
-            rigidbodyMovement.enabled = false;
-            mouseMovement.enabled = true;
+            movement.movementType = Movement.MovementType.RIGIDBODY;
         } else
         {
-            rigidbodyMovement.enabled = !rigidbodyMovement.enabled;
-            mouseMovement.enabled = !mouseMovement.enabled;
+            movement.movementType = Movement.MovementType.MOUSE;
         }
     }
 
