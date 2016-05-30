@@ -1,7 +1,24 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 
+/**
+ * Controls the movement of the player.
+ * 
+ * There are two movement types: MOUSE and RIGIDBODY.
+ * 
+ * MOUSE works by projecting a ray from the camera centre and onto a
+ * plane based on the players current position.
+ * 
+ * RIGIDBODY works by mapping the rigidbody movements (which come from the
+ * MotiveDirect script) to the ground objects coordinates, which by default
+ * are between 0 and 10 on the X and Y axis.
+ * 
+ * Movement is only considered movement if the MOUSE or RIGIDBODY has
+ * moved more than a certain threshold. You can set this threshold in
+ * the MaybeMoveTo method (the Vector3.Distance check), or remove it
+ * entirely there. The reason for it is to not generate an excessive
+ * amount of movement events, when the player is actually standing
+ * still. Especially RIGIDBODY movements occur all the time, every frame.
+ */
 public class Movement : MonoBehaviour {
     public enum MovementType {  MOUSE, RIGIDBODY };
 

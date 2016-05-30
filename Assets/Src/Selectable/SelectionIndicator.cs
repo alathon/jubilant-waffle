@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+/**
+ * A script to control the selection indicator of a selectable item,
+ * i.e. the red border.
+ */
 public class SelectionIndicator : MonoBehaviour {
 	private MeshRenderer indicatorMeshRenderer = null;
     public GameObject indicatorChild;

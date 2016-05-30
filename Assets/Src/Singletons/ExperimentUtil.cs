@@ -1,9 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-//using UnityEditor;
 using System;
-using System.IO;
-using System.Collections.Generic;
 
 public class ExperimentUtil : MonoBehaviour {
     public static ExperimentUtil instance = null;
@@ -11,12 +7,12 @@ public class ExperimentUtil : MonoBehaviour {
     public string catalogPath;
     private DataItemList dataItems;
     private int dataItemCursor = 0;
-    
 
     // File loading.
     private GUIStyle style;
     private bool experimentWindowOpen;
     private string path = "";
+    
 
     void Awake()
     {
@@ -36,10 +32,11 @@ public class ExperimentUtil : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    public void DetailView()
+    public void DetailView(GameObject selectable)
     {
-        GameObject selected = SelectionSingleton.Selected;
-        if(selected != null)
+        GameObject selected = selectable == null ? SelectionSingleton.Selected : selectable;
+
+        if (selected != null)
         {
             selected.GetComponent<DetailViewMode>().GrowOrShrink();
         }
@@ -108,24 +105,25 @@ public class ExperimentUtil : MonoBehaviour {
         return this.dataItems.Items[this.dataItemCursor];
     }
 
-    public void SpawnNext()
+    public GameObject SpawnNext()
     {
         if (this.dataItems == null)
         {
-            return;
+            return null;
         }
 
         if (this.dataItemCursor >= this.dataItems.Items.Count)
         {
             Debug.Log("At the end of catalog. Cannot spawn more items.");
-            return;
+            return null;
         }
 
         var item = SelectableSpawner.Spawn(this.GetCurrentItem().id, this.GetCurrentItem().imagePath);
         Debug.Log("Spawned " + item);
 
         this.dataItemCursor++;
-        // TODO: Activate detail view for item.
+        this.DetailView(item);
+        return item;
     }
     
     public void LoadExperimentFromLog()

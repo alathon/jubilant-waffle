@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+/**
+ * Forces the GameObject to always look at the camera. Used for items
+ * so that they are rotated so as to face the screen, whatever perspective 
+ * we happen to be in.
+ */
 public class CameraFacingBillboard : MonoBehaviour
 {
     private Camera m_Camera;

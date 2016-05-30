@@ -1,9 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+/**
+ * Forces the GameObject this script is attached to
+ * to follow the GameObject with the name 'Player',
+ * and to do so looking straight downward at the player.
+ * 
+ * This is meant to be attached to a camera, to make it follow
+ * a player from above.
+ * 
+ * Set the yOffset to control how far above the player the camera
+ * should be.
+ * 
+ * When enabled, moves the camera. When disabled, resets the camera
+ * to its original offset and orientation.
+ **/
 public class FollowPlayer : MonoBehaviour {
     private GameObject player;       
-    private Vector3 offset;         //Private variable to store the offset distance between the player and camera
+    private Vector3 offset; //Private variable to store the offset distance between the player and camera
 
     private Vector3 origEulerAngles;
     private Vector3 origOffset;

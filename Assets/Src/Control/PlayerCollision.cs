@@ -1,8 +1,28 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 using System.Collections.Generic;
 
+/**
+ * This script maintains a list of objects the player has
+ * collided with. The logic is as follows:
+ * 
+ * - If we have nothing selected, pick the closest object we are
+ * currently colliding with and select it.
+ * - If we have something selected, and are no longer holding down the
+ * mouse button (i.e. dragging something), then select the closest object.
+ * - If we have something selected, and are holding down the mouse button,
+ * we will continue to be selecting that no matter what happens to be
+ * closest.
+ * 
+ * To avoid excessively checking for updates, we only check for a new closest
+ * selection if the list of collided objects changes. This happens whenever a collider
+ * enters or exits the collider attached to the GameObject of this script, and is
+ * controlled by the 'dirty' boolean.
+ * 
+ * The mesh renderer of the GameObject this script is attached to is turned off when
+ * something is selected, i.e., to make the mouse cursor disappear when an item is
+ * selected.
+ */
 public class PlayerCollision : MonoBehaviour
 {
     public LinkedList<GameObject> CollidedWith { get; private set; }

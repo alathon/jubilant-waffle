@@ -1,23 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 
+/**
+ * Starting, saving and loading experiments.
+ * Also has keybindings to toggle top-down view and movement mode
+ **/
 public class ExperimentControl : MonoBehaviour {
-    private Vector3 lastDownPos;
-    private float lastDown;
-
-    // Interval between mouse down/up for something to be a click.
-    public float clickInterval = 0.1f;
-
-    bool wasClick()
-    {
-        return Time.time - lastDown <= clickInterval;
-    }
     
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) lastDown = Time.time;
-
         if (Input.GetKeyDown(KeyCode.L))
         {
             ExperimentUtil.instance.LoadExperimentFromLog();
@@ -38,14 +28,5 @@ public class ExperimentControl : MonoBehaviour {
         {
             ExperimentUtil.instance.StartNewExperiment();
         }
-        if (Input.GetMouseButtonUp(0) && wasClick())
-        {
-            ExperimentUtil.instance.DetailView();
-        }
-        else if(Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.N))
-        {
-            ExperimentUtil.instance.SpawnNext();
-        }
-        
     }
 }

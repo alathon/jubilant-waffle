@@ -1,7 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 
+/**
+ * Provides methods to move the selectable object this script is
+ * attached to. Note that movement is denied if the selectable happens
+ * to be colliding with another selectable, within a certain range.
+ * 
+ * This can be controlled by the Physics.OverlapBox call, which is passed
+ * a Vector3 size to determine how far away something can be and still be
+ * considered overlapping with this GameObject.
+ */
 public class MoveSelectable : MonoBehaviour {
     public class MoveSelectableEvent : LogEvent
     {
